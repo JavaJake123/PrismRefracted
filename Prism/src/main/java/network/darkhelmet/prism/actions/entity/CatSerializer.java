@@ -1,6 +1,7 @@
 package network.darkhelmet.prism.actions.entity;
 
 import network.darkhelmet.prism.utils.MiscUtils;
+import org.bukkit.Registry;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 
@@ -14,7 +15,7 @@ public class CatSerializer extends EntitySerializer {
 
     @Override
     protected void deserializer(Entity entity) {
-        Cat.Type type = MiscUtils.getEnum(var, Cat.Type.ALL_BLACK);
+        Cat.Type type = MiscUtils.getEntityType(var, Cat.Type.ALL_BLACK, Registry.CAT_VARIANT);
         ((Cat) entity).setCatType(type);
     }
 

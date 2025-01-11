@@ -1,8 +1,10 @@
 package network.darkhelmet.prism.utils.block;
 
+import network.darkhelmet.prism.Prism;
 import network.darkhelmet.prism.api.BlockStateChange;
 import network.darkhelmet.prism.events.BlockStateChangeImpl;
 import network.darkhelmet.prism.utils.MaterialTag;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -670,5 +672,25 @@ public class Utilities {
         } else {
             return baseMaterials.get(material);
         }
+    }
+
+    public static BlockData createBlockData(Material material, String data) {
+        if (material == null) return null;
+
+        BlockData bd;
+        try {
+            if (data == null || data.isEmpty()) {
+                bd = Bukkit.getServer().createBlockData(material);
+            } else {
+                bd = Bukkit.getServer().createBlockData(material, data);
+            }
+        } catch (IllegalArgumentException | NullPointerException e) {
+            bd = null;
+        }
+        return bd;
+    }
+
+    public static BlockData createBlockData(Material material) {
+        return createBlockData(material, null);
     }
 }

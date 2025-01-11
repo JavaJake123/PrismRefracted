@@ -253,7 +253,9 @@ public class ItemStackActionData {
     public ItemStack toItem() {
         ItemStack item = new ItemStack(material, amt);
 
-        MaterialState.setItemDamage(item, durability);
+        // Don't set the durability if it's 0 or it causes mismatches by adding "Damage=0" to the item meta
+        if (durability > 0)
+            MaterialState.setItemDamage(item, durability);
 
         // Restore enchantment
         if (enchs != null && enchs.length > 0) {

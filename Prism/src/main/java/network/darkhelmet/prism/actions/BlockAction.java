@@ -401,7 +401,7 @@ public class BlockAction extends GenericAction {
                 }
                 break;
             case JUKEBOX:
-                setBlockData(Bukkit.createBlockData(JUKEBOX));
+                setBlockData(Utilities.createBlockData(JUKEBOX));
                 break;
             default:
                 break;
@@ -627,13 +627,13 @@ public class BlockAction extends GenericAction {
                 stateChange = new BlockStateChangeImpl(originalBlock, originalBlock);
 
                 // Preview it
-                EntityUtils.sendBlockChange(player, block.getLocation(), Bukkit.createBlockData(AIR));
+                EntityUtils.sendBlockChange(player, block.getLocation(), Utilities.createBlockData(AIR));
 
                 // Send preview to shared players
                 for (final CommandSender sharedPlayer : parameters.getSharedPlayers()) {
                     if (sharedPlayer instanceof Player) {
                         EntityUtils.sendBlockChange((Player) sharedPlayer, block.getLocation(),
-                                Bukkit.createBlockData(AIR));
+                                Utilities.createBlockData(AIR));
                     }
                 }
             }

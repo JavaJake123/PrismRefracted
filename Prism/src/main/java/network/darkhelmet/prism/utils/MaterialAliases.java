@@ -88,7 +88,7 @@ public class MaterialAliases {
                 String dataString;
 
                 try {
-                    dataString = Utilities.dataString(Bukkit.createBlockData(m));
+                    dataString = Utilities.dataString(Utilities.createBlockData(m));
                 } catch (IllegalArgumentException e) {
                     continue;
                 }
@@ -256,7 +256,7 @@ public class MaterialAliases {
      */
     public Set<IntPair> partialBlockDataIds(Material material, String partialBlockData)
             throws IllegalArgumentException {
-        String fullBlockData = Utilities.dataString(Bukkit.createBlockData(material, partialBlockData));
+        String fullBlockData = Utilities.dataString(Utilities.createBlockData(material, partialBlockData));
 
         String[] parts = fullBlockData.substring(1, fullBlockData.length() - 1).toLowerCase(Locale.ENGLISH).split(",");
 

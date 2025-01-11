@@ -13,9 +13,13 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -28,6 +32,7 @@ import org.kitteh.pastegg.Visibility;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MiscUtils {
 
@@ -98,6 +103,16 @@ public class MiscUtils {
                 return (T) Enum.valueOf(fallback.getClass(), from.toUpperCase());
             } catch (IllegalArgumentException e) {
                 Prism.debug(e.getMessage());
+            }
+        }
+        return fallback;
+    }
+    public static <T extends Keyed> T getEntityType(String key, T fallback, Registry<T> registry) {
+        if (key != null) {
+            try {
+                return registry.getOrThrow(NamespacedKey.minecraft(key.toLowerCase(Locale.ROOT)));
+            } catch (IllegalArgumentException e) {
+                Prism.debug("Invalid type: " + key + " - " + e.getMessage());
             }
         }
         return fallback;
@@ -299,4 +314,5 @@ public class MiscUtils {
                 .append(divider)
                 .append(getNextButton()).build();
     }
+
 }

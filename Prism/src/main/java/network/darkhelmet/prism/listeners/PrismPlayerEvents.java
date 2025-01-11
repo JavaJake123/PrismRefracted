@@ -9,6 +9,7 @@ import network.darkhelmet.prism.players.PlayerIdentification;
 import network.darkhelmet.prism.utils.InventoryUtils;
 import network.darkhelmet.prism.utils.MaterialTag;
 import network.darkhelmet.prism.utils.MiscUtils;
+import network.darkhelmet.prism.utils.block.Utilities;
 import network.darkhelmet.prism.wands.ProfileWand;
 import network.darkhelmet.prism.wands.Wand;
 import net.kyori.adventure.text.Component;
@@ -285,7 +286,7 @@ public class PrismPlayerEvents implements Listener {
         }
 
         BlockData oldData = spot.getBlockData();
-        BlockData newData = Bukkit.createBlockData(newMat);
+        BlockData newData = Utilities.createBlockData(newMat);
 
         BlockData clickedData = event.getBlockClicked().getBlockData();
 

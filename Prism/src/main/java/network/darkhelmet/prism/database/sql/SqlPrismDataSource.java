@@ -159,7 +159,7 @@ public abstract class SqlPrismDataSource implements PrismDataSource {
             String query = "CREATE TABLE IF NOT EXISTS `" + prefix + "actions` ("
                     + "`action_id` int(10) unsigned NOT NULL AUTO_INCREMENT," + "`action` varchar(25) NOT NULL,"
                     + "PRIMARY KEY (`action_id`)," + "UNIQUE KEY `action` (`action`)"
-                    + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+                    + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;";
             st.executeUpdate(query);
 
             // data
@@ -172,7 +172,7 @@ public abstract class SqlPrismDataSource implements PrismDataSource {
                     + "`old_block_subid` mediumint(5) DEFAULT NULL," + "PRIMARY KEY (`id`)," + "KEY `epoch` (`epoch`),"
                     + "KEY  `location` (`world_id`, `x`, `z`, `y`, `action_id`),"
                     + "KEY  `player` (`player_id`)"
-                    + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+                    + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;";
             st.executeUpdate(query);
 
             // extra prism data table (check if it exists first, so we can avoid
@@ -191,7 +191,7 @@ public abstract class SqlPrismDataSource implements PrismDataSource {
                         + "`extra_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
                         + "`data_id` bigint(20) unsigned NOT NULL," + "`data` text NULL," + "`te_data` text NULL,"
                         + "PRIMARY KEY (`extra_id`)," + "KEY `data_id` (`data_id`)"
-                        + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+                        + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;";
                 st.executeUpdate(query);
 
                 // add extra data delete cascade
@@ -204,7 +204,7 @@ public abstract class SqlPrismDataSource implements PrismDataSource {
             // meta
             query = "CREATE TABLE IF NOT EXISTS `" + prefix + "meta` ("
                     + "`id` int(10) unsigned NOT NULL AUTO_INCREMENT," + "`k` varchar(25) NOT NULL,"
-                    + "`v` varchar(255) NOT NULL," + "PRIMARY KEY (`id`)" + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+                    + "`v` varchar(255) NOT NULL," + "PRIMARY KEY (`id`)" + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;";
             st.executeUpdate(query);
 
             // players
@@ -212,14 +212,14 @@ public abstract class SqlPrismDataSource implements PrismDataSource {
                     + "`player_id` int(10) unsigned NOT NULL AUTO_INCREMENT," + "`player` varchar(255) NOT NULL,"
                     + "`player_uuid` binary(16) NOT NULL," + "PRIMARY KEY (`player_id`),"
                     + "UNIQUE KEY `player` (`player`)," + "UNIQUE KEY `player_uuid` (`player_uuid`)"
-                    + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+                    + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;";
             st.executeUpdate(query);
 
             // worlds
             query = "CREATE TABLE IF NOT EXISTS `" + prefix + "worlds` ("
                     + "`world_id` int(10) unsigned NOT NULL AUTO_INCREMENT," + "`world` varchar(255) NOT NULL,"
                     + "PRIMARY KEY (`world_id`)," + "UNIQUE KEY `world` (`world`)"
-                    + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+                    + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;";
             st.executeUpdate(query);
 
             // actions
@@ -234,7 +234,7 @@ public abstract class SqlPrismDataSource implements PrismDataSource {
             query = "CREATE TABLE IF NOT EXISTS `" + prefix + "id_map` (" + "`material` varchar(63) NOT NULL,"
                     + "`state` varchar(255) NOT NULL," + "`block_id` mediumint(5) NOT NULL AUTO_INCREMENT,"
                     + "`block_subid` mediumint(5) NOT NULL DEFAULT 0," + "PRIMARY KEY (`material`, `state`),"
-                    + "UNIQUE KEY (`block_id`, `block_subid`)" + ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+                    + "UNIQUE KEY (`block_id`, `block_subid`)" + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
             st.executeUpdate(query);
         } catch (final SQLException e) {
             handleDataSourceException(e);

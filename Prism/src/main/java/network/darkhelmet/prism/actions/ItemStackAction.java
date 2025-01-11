@@ -285,7 +285,6 @@ public class ItemStackAction extends GenericAction {
             }
 
             if (inventory != null) {
-
                 final PrismProcessType pt = parameters.getProcessType();
                 final String n = getActionType().getName();
 
@@ -381,13 +380,11 @@ public class ItemStackAction extends GenericAction {
 
                     // We'll attempt to take it from the same slot
                     if (iSlot >= 0) {
-
                         if (iSlot >= inventory.getContents().length) {
                             inventory.addItem(getItem());
                         } else {
                             final ItemStack currentSlotItem = inventory.getItem(iSlot);
                             ItemStack item = getItem().clone();
-
                             if (item.isSimilar(currentSlotItem)) {
                                 int amount = 0;
                                 if (currentSlotItem != null) {

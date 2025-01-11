@@ -1,5 +1,6 @@
 package network.darkhelmet.prism.utils;
 
+import network.darkhelmet.prism.utils.block.Utilities;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,7 +31,7 @@ public class ChunkUtils {
      * @param blocks Iterable Block list,
      */
     public static void setPreviewBoundaryBlocks(Player player, Iterable<Block> blocks, Material m) {
-        BlockData blockData = m.createBlockData();
+        BlockData blockData = Utilities.createBlockData(m);
         for (Block block : blocks) {
             EntityUtils.sendBlockChange(player, block.getLocation(), blockData);
         }

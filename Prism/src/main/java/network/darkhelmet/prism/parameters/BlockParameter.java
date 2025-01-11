@@ -3,6 +3,7 @@ package network.darkhelmet.prism.parameters;
 import network.darkhelmet.prism.Prism;
 import network.darkhelmet.prism.actionlibs.QueryParameters;
 import network.darkhelmet.prism.api.objects.MaterialState;
+import network.darkhelmet.prism.utils.block.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -77,7 +78,7 @@ public class BlockParameter extends SimplePrismParameterHandler {
                             String part2 = '[' + parts[1];
 
                             try {
-                                Bukkit.createBlockData(mat, part2);
+                                Utilities.createBlockData(mat, part2);
                                 query.addBlockDataFilter(new MaterialState(mat, part2));
                             } catch (IllegalArgumentException e) {
                                 Prism.messenger.sendMessage(sender, Prism.messenger.playerError(

@@ -16,6 +16,7 @@ import network.darkhelmet.prism.measurement.TimeTaken;
 import network.darkhelmet.prism.utils.IntPair;
 import network.darkhelmet.prism.utils.ItemUtils;
 import network.darkhelmet.prism.utils.TypeUtils;
+import network.darkhelmet.prism.utils.block.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -545,54 +546,60 @@ public class SqlSelectQueryBuilder extends QueryBuilder implements SelectQuery {
                     boolean validBlockId = false;
                     boolean validOldBlockId = false;
 
-                    MaterialState current = Prism.getItems().idsToMaterial(blockId, blockSubId, false);
+                    MaterialState current = null;
+                    try {
+                        current = Prism.getItems().idsToMaterial(blockId, blockSubId, true);
 
-                    if (current != null) {
-                        ItemStack item = current.asItem();
-                        BlockData block = current.asBlockData();
+                        if (current != null) {
+                            ItemStack item = current.asItem();
+                            BlockData block = current.asBlockData();
 
-                        if (block != null) {
-                            validBlockId = true;
-                            baseHandler.setMaterial(block.getMaterial());
-                            baseHandler.setBlockData(block);
-                            baseHandler.setDurability((short) 0);
+                            if (block != null) {
+                                validBlockId = true;
+                                baseHandler.setMaterial(block.getMaterial());
+                                baseHandler.setBlockData(block);
+                                baseHandler.setDurability((short) 0);
 
-                        } else if (item != null) {
-                            validBlockId = true;
-                            baseHandler.setMaterial(item.getType());
+                            } else if (item != null) {
+                                validBlockId = true;
+                                baseHandler.setMaterial(item.getType());
 
-                            BlockData newData;
+                                BlockData newData = Utilities.createBlockData(item.getType());
 
-                            try {
-                                newData = Bukkit.createBlockData(item.getType());
-                            } catch (IllegalArgumentException e) {
-                                // This exception occurs, for example, with "ItemStack{DIAMOND_LEGGINGS x 1}"
-                                Prism.debug("IllegalArgumentException for record #" + rowId
-                                        + " calling createBlockData for " + item.toString());
-                                newData = null;
+                                baseHandler.setBlockData(newData);
+                                baseHandler.setDurability((short) ItemUtils.getItemDamage(item));
                             }
-
-                            baseHandler.setBlockData(newData);
-                            baseHandler.setDurability((short) ItemUtils.getItemDamage(item));
                         }
+                    } catch (Exception e) {
+                        Prism.warn("Error in row #" + rowId +": Unable to construct material from block_id (" + blockId +"): "
+                                + e.getClass().getSimpleName() + ": " + e.getMessage());
+                        Prism.warn("MaterialState: " + (current == null ? "null" : current.material + "/" + current.state.toString()));
+                        continue;
                     }
 
-                    MaterialState old = Prism.getItems().idsToMaterial(oldBlockId, oldBlockSubId, false);
+                    MaterialState old = null;
+                    try {
+                        old = Prism.getItems().idsToMaterial(oldBlockId, oldBlockSubId, true);
+                        if (old != null) {
+                            ItemStack oldItem = old.asItem();
+                            BlockData oldBlock = old.asBlockData();
+                            validOldBlockId = true;
 
-                    if (old != null) {
-                        ItemStack oldItem = old.asItem();
-                        BlockData oldBlock = old.asBlockData();
-                        validOldBlockId = true;
-
-                        if (oldBlock != null) {
-                            baseHandler.setOldMaterial(oldBlock.getMaterial());
-                            baseHandler.setOldBlockData(oldBlock);
-                            baseHandler.setOldDurability((short) 0);
-                        } else {
-                            baseHandler.setOldMaterial(oldItem.getType());
-                            baseHandler.setOldBlockData(Bukkit.createBlockData(oldItem.getType()));
-                            baseHandler.setOldDurability((short) ItemUtils.getItemDamage(oldItem));
+                            if (oldBlock != null) {
+                                baseHandler.setOldMaterial(oldBlock.getMaterial());
+                                baseHandler.setOldBlockData(oldBlock);
+                                baseHandler.setOldDurability((short) 0);
+                            } else {
+                                baseHandler.setOldMaterial(oldItem.getType());
+                                baseHandler.setOldBlockData(Utilities.createBlockData(oldItem.getType()));
+                                baseHandler.setOldDurability((short) ItemUtils.getItemDamage(oldItem));
+                            }
                         }
+                    } catch (Exception e) {
+                        Prism.warn("Error in row #" + rowId +": Unable to construct material from old_block_id (" + oldBlockId +"): "
+                            + e.getClass().getSimpleName() + ": " + e.getMessage());
+                        Prism.warn("MaterialState: " + (old == null ? "null" : old.material + "/" + old.state.toString()));
+                        continue;
                     }
 
                     if (!validBlockId && !validOldBlockId) {
@@ -664,14 +671,14 @@ public class SqlSelectQueryBuilder extends QueryBuilder implements SelectQuery {
                     baseHandler.setAggregateCount(aggregated);
 
                     actions.add(baseHandler);
-                } catch (final SQLException e) {
+                } catch (final SQLException | NullPointerException e) {
                     Prism.warn("Ignoring data from record #" + rowId + " because it caused an error:", e);
                 }
             }
         } catch (NullPointerException e) {
             if (RecordingManager.failedDbConnectionCount == 0) {
                 Prism.log(
-                        "Prism database error. Connection missing. Leaving actions to log in queue.");
+                        "Prism database query error. Connection missing. Leaving actions to log in queue.");
                 Prism.debug(e.getMessage());
             }
             RecordingManager.failedDbConnectionCount++;
