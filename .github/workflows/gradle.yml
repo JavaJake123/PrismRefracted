@@ -48,4 +48,4 @@ jobs:
       - name: Upload the final artifact
         uses: actions/upload-artifact@v4
         with:
-          path: build/libs/*.jar
+          path: Prism/build/libs/*.jar
