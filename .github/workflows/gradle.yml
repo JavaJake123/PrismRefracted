@@ -48,4 +48,4 @@ jobs:
       - name: Upload the final artifact
         uses: actions/upload-artifact@v4
         with:
-          path: plugin/build/lib/*.jar
+          path: build/libs/*.jar
